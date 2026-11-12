@@ -65,7 +65,7 @@
       return '<form class="form" id="bkForm" novalidate>' +
         '<div class="form-row">' +
         '<label class="field">Nome completo<input id="bkName" name="name" autocomplete="name" value="' + esc(f.name) + '"><span class="err" id="bkNameErr"></span></label>' +
-        '<label class="field">WhatsApp<input id="bkPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(11) 90000-0000" value="' + esc(f.phone) + '"><span class="err" id="bkPhoneErr"></span></label>' +
+        '<label class="field">WhatsApp<input id="bkPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(11) 90000-0000" value="' + esc(UR.maskPhone(f.phone)) + '"><span class="err" id="bkPhoneErr"></span></label>' +
         '</div>' +
         '<label class="field">Observação (opcional)<textarea id="bkNote" name="note" placeholder="Ex.: dor em um dente, primeira consulta, consulta para criança">' + esc(f.note) + '</textarea></label>' +
         (UR.auth && !u ? '<p class="hint">Já tem cadastro? <button type="button" id="bkLogin">Entre</button> para preencher automaticamente e acompanhar suas consultas.</p>' : '') +
@@ -101,7 +101,7 @@
 
   function confirm() {
     saveForm();
-    var f = state.form, ok = true;
+    var f = state.form;
     var nameErr = f.name.length < 3 ? 'Digite seu nome completo.' : '';
     var phoneErr = UR.digits(f.phone).length < 10 ? 'Digite o WhatsApp com DDD.' : '';
     document.getElementById('bkNameErr').textContent = nameErr;
@@ -161,7 +161,7 @@
   body.addEventListener('submit', function (e) { e.preventDefault(); confirm(); });
   back.addEventListener('click', function () { saveForm(); go(state.step - 1); });
   next.addEventListener('click', function () { if (state.step === 3) confirm(); else go(state.step + 1); });
-  document.addEventListener('ur:auth', function () { if (state.step === 3) { saveForm(); if (!state.form.name) state.form = { name: '', phone: '', note: state.form.note }; render(); } });
+  document.addEventListener('ur:auth', function () { if (state.step === 3) { saveForm(); render(); } });
 
   UR.booking = { pick: function (id) { state.service = id; go(1); } };
   render();
