@@ -1,27 +1,35 @@
 /* Uni Risos — agendamento em 4 etapas: tratamento, dia, horário, dados */
 (function () {
   'use strict';
-  var UR = window.UR, esc = UR.esc;
+  var UR = window.UR, api = UR.api, esc = UR.esc;
   var body = document.getElementById('bookingBody'), stepsEl = document.getElementById('steps');
   var back = document.getElementById('bkBack'), next = document.getElementById('bkNext'), summary = document.getElementById('bkSummary');
   var foot = next.parentElement;
   var state = { step: 0, service: null, date: null, time: null, form: { name: '', phone: '', note: '' } };
+  var taken = {}, loaded = false, busy = false, pending = false, finished = false;
 
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
   var iso = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
   var serviceOf = function (id) { return UR.services.filter(function (s) { return s.id === id; })[0]; };
+
+  /* Busca no servidor os horários já ocupados nas próximas semanas */
+  function refresh() {
+    var a = UR.nowSP(), b = UR.nowSP();
+    b.setDate(b.getDate() + 45);
+    return api.takenRange(iso(a), iso(b)).then(function (map) { taken = map; loaded = true; })
+      .catch(function () { loaded = true; UR.toast('Não foi possível carregar a agenda. Verifique sua conexão.'); })
+      .then(function () { if (!finished) render(); });
+  }
 
   /* Horários de 30 em 30 minutos dentro do expediente; some o que já passou ou já foi reservado */
   function slotsFor(dateIso) {
     var p = dateIso.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]), h = UR.hours[d.getDay()];
     if (!h) return [];
     var now = UR.nowSP(), isToday = iso(now) === dateIso, limit = now.getHours() * 60 + now.getMinutes() + 60;
-    var taken = {};
-    UR.store.bookings().forEach(function (b) { if (b.date === dateIso && b.status !== 'cancelado') taken[b.time] = 1; });
-    var out = [];
+    var busyDay = taken[dateIso] || {}, out = [];
     for (var m = h[0] * 60; m < h[1] * 60; m += 30) {
       var t = pad(Math.floor(m / 60)) + ':' + pad(m % 60);
-      out.push({ time: t, free: !taken[t] && !(isToday && m < limit) });
+      out.push({ time: t, free: !busyDay[t] && !(isToday && m < limit) });
     }
     return out;
   }
@@ -43,6 +51,7 @@
       }).join('') + '</div><p class="hint" style="margin-top:16px">Não sabe qual escolher? Marque <b>Avaliação e limpeza</b> e a Dra. Jaqueline orienta você.</p>';
     },
     function () {
+      if (!loaded) return '<p class="hint">Carregando a agenda…</p>';
       var wd = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'], mo = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
       return '<div class="opt-grid day-grid">' + days().map(function (d) {
         return '<button type="button" class="opt day' + (state.date === d.iso ? ' is-on' : '') + '" data-k="date" data-v="' + d.iso + '">' +
@@ -60,7 +69,7 @@
       }).join('');
     },
     function () {
-      var u = UR.auth && UR.auth.user(), f = state.form;
+      var u = api.user(), f = state.form;
       if (u && !f.name) { f.name = u.name; f.phone = u.phone; }
       return '<form class="form" id="bkForm" novalidate>' +
         '<div class="form-row">' +
@@ -68,7 +77,8 @@
         '<label class="field">WhatsApp<input id="bkPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(11) 90000-0000" value="' + esc(UR.maskPhone(f.phone)) + '"><span class="err" id="bkPhoneErr"></span></label>' +
         '</div>' +
         '<label class="field">Observação (opcional)<textarea id="bkNote" name="note" placeholder="Ex.: dor em um dente, primeira consulta, consulta para criança">' + esc(f.note) + '</textarea></label>' +
-        (UR.auth && !u ? '<p class="hint">Já tem cadastro? <button type="button" id="bkLogin">Entre</button> para preencher automaticamente e acompanhar suas consultas.</p>' : '') +
+        (u ? '<p class="hint">Agendando como <b>' + esc(u.email) + '</b>.</p>'
+          : '<p class="hint">Para reservar o horário você entra ou cria sua conta no próximo passo. Leva menos de um minuto.</p>') +
         '</form>';
     }
   ];
@@ -82,8 +92,8 @@
     body.innerHTML = views[state.step]();
     foot.hidden = false;
     back.hidden = state.step === 0;
-    next.textContent = state.step === 3 ? 'Confirmar agendamento' : 'Continuar';
-    next.disabled = !ready();
+    next.textContent = state.step < 3 ? 'Continuar' : busy ? 'Reservando…' : api.user() ? 'Confirmar agendamento' : 'Entrar e confirmar';
+    next.disabled = !ready() || busy;
     var parts = [];
     if (state.service) parts.push(serviceOf(state.service).name);
     if (state.date) parts.push(UR.fmtDate(state.date));
@@ -91,7 +101,7 @@
     summary.textContent = parts.join(' · ');
   }
 
-  function go(step) { state.step = step; render(); }
+  function go(step) { finished = false; state.step = step; render(); }
 
   function saveForm() {
     var n = document.getElementById('bkName');
@@ -100,6 +110,7 @@
   }
 
   function confirm() {
+    if (busy) return;
     saveForm();
     var f = state.form;
     var nameErr = f.name.length < 3 ? 'Digite seu nome completo.' : '';
@@ -107,36 +118,43 @@
     document.getElementById('bkNameErr').textContent = nameErr;
     document.getElementById('bkPhoneErr').textContent = phoneErr;
     if (nameErr || phoneErr) { document.getElementById(nameErr ? 'bkName' : 'bkPhone').focus(); return; }
-    if (!slotsFor(state.date).some(function (s) { return s.time === state.time && s.free; })) {
-      UR.toast('Esse horário acabou de ser ocupado. Escolha outro.');
-      state.time = null; go(2); return;
-    }
-    var u = UR.auth && UR.auth.user();
-    var b = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    if (!api.user()) { pending = true; UR.auth.open('signup', { name: f.name, phone: f.phone }); return; }
+
+    busy = true; render();
+    api.createBooking({
       service: state.service, serviceName: serviceOf(state.service).name,
-      date: state.date, time: state.time, name: f.name, phone: UR.digits(f.phone), note: f.note,
-      user: u ? u.email : null, status: 'pendente', created: new Date().toISOString()
-    };
-    UR.store.addBooking(b);
-    document.dispatchEvent(new CustomEvent('ur:booking'));
-    done(b);
+      date: state.date, time: state.time, name: f.name, phone: UR.digits(f.phone), note: f.note
+    }).then(function (b) {
+      busy = false;
+      document.dispatchEvent(new CustomEvent('ur:booking'));
+      done(b);
+      refresh();
+    }).catch(function (e) {
+      busy = false;
+      if (e.code === 'taken') {
+        UR.toast('Esse horário acabou de ser ocupado. Escolha outro.');
+        state.time = null; state.step = 2;
+        refresh();
+      } else { UR.toast(e.message || 'Não foi possível agendar. Tente de novo.'); render(); }
+    });
   }
 
   function done(b) {
+    finished = true;
     Array.prototype.forEach.call(stepsEl.children, function (li) { li.className = 'is-done'; });
     foot.hidden = true;
     body.innerHTML = '<div class="done">' +
       '<svg viewBox="0 0 120 60" aria-hidden="true"><path d="M8 10 C 28 62, 92 62, 112 10" pathLength="100"/></svg>' +
-      '<h3>Pedido registrado, ' + esc(b.name.split(' ')[0]) + '!</h3>' +
-      '<p>Falta um passo: envie o pedido para a clínica pelo WhatsApp. É por lá que a equipe confirma o seu horário.</p>' +
+      '<h3>Horário reservado, ' + esc(b.name.split(' ')[0]) + '!</h3>' +
+      '<p>Seu pedido já está na agenda da clínica. A equipe confirma com você pelo WhatsApp; se quiser, adiante o contato pelo botão abaixo.</p>' +
       '<div class="ticket">' +
       '<div><span>Tratamento</span><b>' + esc(b.serviceName) + '</b></div>' +
       '<div><span>Dia</span><b>' + UR.fmtDate(b.date) + '</b></div>' +
       '<div><span>Horário</span><b>' + b.time + '</b></div>' +
       '<div><span>Local</span><b>Av. Felipe Carrillo Puerto, 400</b></div></div>' +
       '<div class="done-actions">' +
-      '<a class="btn btn-sage btn-lg" href="' + UR.whatsLink(b) + '" target="_blank" rel="noopener">Enviar no WhatsApp →</a>' +
+      '<a class="btn btn-sage btn-lg" href="' + UR.whatsLink(b) + '" target="_blank" rel="noopener">Avisar no WhatsApp →</a>' +
+      '<button class="btn btn-ghost-light btn-lg" type="button" id="bkMine">Minhas consultas</button>' +
       '<button class="btn btn-ghost-light btn-lg" type="button" id="bkAgain">Novo agendamento</button></div></div>';
     state = { step: 0, service: null, date: null, time: null, form: { name: '', phone: '', note: '' } };
   }
@@ -153,7 +171,7 @@
       return;
     }
     if (e.target.id === 'bkAgain') go(0);
-    if (e.target.id === 'bkLogin') { saveForm(); UR.auth.open(); }
+    if (e.target.id === 'bkMine') UR.auth.open();
   });
   body.addEventListener('input', function (e) {
     if (e.target.id === 'bkPhone') e.target.value = UR.maskPhone(e.target.value);
@@ -161,8 +179,19 @@
   body.addEventListener('submit', function (e) { e.preventDefault(); confirm(); });
   back.addEventListener('click', function () { saveForm(); go(state.step - 1); });
   next.addEventListener('click', function () { if (state.step === 3) confirm(); else go(state.step + 1); });
-  document.addEventListener('ur:auth', function () { if (state.step === 3) { saveForm(); render(); } });
+
+  /* Depois de entrar ou criar a conta no meio do fluxo, conclui o agendamento sozinho */
+  document.addEventListener('ur:auth', function () {
+    if (finished) return;
+    if (state.step === 3) saveForm();
+    render();
+    if (pending && api.user() && state.step === 3) { pending = false; UR.auth.close(); confirm(); }
+  });
+  document.addEventListener('ur:authclosed', function () { pending = false; });
 
   UR.booking = { pick: function (id) { state.service = id; go(1); } };
   render();
+  refresh();
+  /* Atualiza a disponibilidade quando a pessoa volta para a aba */
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && !finished) refresh(); });
 })();

@@ -1,5 +1,4 @@
-/* Uni Risos — persistência local.
-   Ponto único de leitura e escrita: para ir a produção, troque estas funções por chamadas a uma API. */
+/* Uni Risos — utilitários e armazenamento local usado pelo modo de demonstração (ver js/backend.js) */
 (function () {
   'use strict';
   var UR = (window.UR = window.UR || {});
@@ -19,8 +18,8 @@
   UR.store = {
     bookings: function () { return read('bookings', []); },
     addBooking: function (b) { var all = read('bookings', []); all.push(b); write('bookings', all); },
-    cancelBooking: function (id) {
-      write('bookings', read('bookings', []).map(function (b) { if (b.id === id) b.status = 'cancelado'; return b; }));
+    setStatus: function (id, status) {
+      write('bookings', read('bookings', []).map(function (b) { if (b.id === id) b.status = status; return b; }));
     },
     users: function () { return read('users', []); },
     addUser: function (u) { var all = read('users', []); all.push(u); write('users', all); },
