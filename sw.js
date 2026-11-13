@@ -1,6 +1,6 @@
 /* Uni Risos — service worker: deixa o app abrir rápido e funcionar sem conexão.
    Ao publicar mudanças, aumente VERSION para os aparelhos baixarem os arquivos novos. */
-const VERSION = 'uni-risos-v1';
+const VERSION = 'uni-risos-v2';
 const SHELL = [
   './', 'index.html', 'instalar.html', 'styles.css', 'manifest.webmanifest',
   'js/main.js', 'js/firebase-config.js', 'js/store.js', 'js/backend.js', 'js/booking.js', 'js/auth.js', 'js/pwa.js',
