@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instale o app — Uni Risos</title>
+<meta name="description" content="Instale o app da Uni Risos no celular para agendar e acompanhar suas consultas.">
+<meta name="theme-color" content="#8b926f">
+<link rel="icon" href="assets/logo-selo.jpg">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="install-page">
+<main class="install">
+  <a class="brand" href="./"><img src="assets/logo-selo.jpg" alt="" width="46" height="46"><span>Uni Risos<small>Odontologia especializada</small></span></a>
+
+  <div class="install-hero">
+    <img class="install-icon" src="assets/icon-512.png" alt="Ícone do app Uni Risos" width="512" height="512">
+    <div>
+      <h1>O app da <em>Uni Risos</em> no seu celular</h1>
+      <p>Agende, acompanhe e cancele consultas em poucos toques. Gratuito, sem loja de aplicativos e sem ocupar espaço.</p>
+      <div class="install-actions">
+        <button class="btn btn-ink btn-lg" type="button" data-install hidden>Instalar app</button>
+        <a class="btn btn-line btn-lg" href="./">Abrir no navegador</a>
+      </div>
+      <p class="install-state" id="installState"></p>
+    </div>
+  </div>
+
+  <div class="install-grid">
+    <section class="install-card install-qr">
+      <img src="assets/qr-instalar.svg" alt="QR code que abre a página de instalação do app Uni Risos" width="240" height="240">
+      <div>
+        <h2>Está no computador?</h2>
+        <p>Aponte a câmera do celular para o código e siga os passos ao lado.</p>
+        <p class="install-url" id="installUrl"></p>
+      </div>
+    </section>
+    <section class="install-card">
+      <h2>Android</h2>
+      <ol>
+        <li>Abra esta página no <b>Chrome</b>.</li>
+        <li>Toque em <b>Instalar app</b>, aqui em cima.</li>
+        <li>Confirme em <b>Instalar</b>. O ícone aparece na tela inicial.</li>
+      </ol>
+    </section>
+    <section class="install-card">
+      <h2>iPhone</h2>
+      <ol>
+        <li>Abra esta página no <b>Safari</b>.</li>
+        <li>Toque em <b>Compartilhar</b> (o quadrado com a seta).</li>
+        <li>Escolha <b>Adicionar à Tela de Início</b>.</li>
+      </ol>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+  window.UR = { toast: function (m) { var t = document.getElementById('toast'); t.textContent = m; t.classList.add('is-on'); setTimeout(function () { t.classList.remove('is-on'); }, 4000); } };
+  document.getElementById('installUrl').textContent = location.href.split('?')[0].replace(/^https?:\/\//, '');
+</script>
+<script src="js/pwa.js"></script>
+</body>
+</html>
