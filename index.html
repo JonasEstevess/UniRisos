@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Uni Risos — Odontologia Especializada | Jardim Iae, São Paulo</title>
 <meta name="description" content="Clínica odontológica no Jardim Iae, São Paulo. Nota 5,0 no Google. Agende sua consulta online com a Dra. Jaqueline Xavier.">
-<meta name="theme-color" content="#93a487">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%2393a487'/%3E%3Cpath d='M18 26c3 14 25 14 28 0' fill='none' stroke='%23f2f3ea' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#8b926f">
+<link rel="icon" href="assets/logo-selo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <!-- Abertura -->
 <div class="loader" id="loader" aria-hidden="true">
-  <svg class="loader-smile" viewBox="0 0 200 80"><path d="M10 12 C 40 90, 160 90, 190 12" pathLength="100"/></svg>
+  <svg class="loader-smile" viewBox="0 0 385 340"><path d="M20 17V165C20 215 40 250 67 268V20H317C317 145 235 245 125 267" pathLength="100"/><path d="M250 207 363 323" pathLength="100"/><path d="M90 282C150 335 330 345 363 150" pathLength="100"/><circle cx="362" cy="123" r="9"/></svg>
   <div class="loader-row"><span>Uni Risos</span><span id="loaderNum">0</span></div>
 </div>
 
@@ -25,8 +25,8 @@
 <!-- Navegação -->
 <header class="nav" id="nav">
   <a class="brand" href="#topo" aria-label="Uni Risos, início">
-    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 16c2 10 16 10 18 0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-    <span>Uni Risos</span>
+    <img src="assets/logo-selo.jpg" alt="" width="46" height="46">
+    <span>Uni Risos<small>Odontologia especializada</small></span>
   </a>
   <nav class="nav-links" id="navLinks" aria-label="Principal">
     <a href="#clinica">A clínica</a>
@@ -63,13 +63,7 @@
       <a class="btn btn-line btn-lg" href="https://wa.me/5511964008106" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
-  <div class="seal" aria-hidden="true">
-    <svg viewBox="0 0 200 200">
-      <defs><path id="sealPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-      <text><textPath href="#sealPath">UNI RISOS · ODONTOLOGIA ESPECIALIZADA · CRO-SP 037.967 · </textPath></text>
-    </svg>
-    <svg class="seal-mark" viewBox="0 0 40 40"><path d="M9 15c2.5 12 19.5 12 22 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
-  </div>
+  <img class="hero-logo" src="assets/logo-selo.jpg" alt="Logo da Uni Risos Odontologia Especializada" width="640" height="640">
 </section>
 
 <!-- Faixa -->
@@ -84,6 +78,12 @@
 <section class="about" id="clinica">
   <p class="eyebrow">A clínica</p>
   <p class="manifesto" id="manifesto">Na Uni Risos, ninguém é só mais uma ficha. A gente recebe você pelo nome, explica cada etapa do tratamento e cuida para que a ida ao dentista seja um momento tranquilo. Do primeiro oi na recepção ao último retoque no sorriso.</p>
+  <div class="gallery">
+    <figure class="g-a" data-reveal><img src="assets/recepcao.jpg" alt="Recepção da Uni Risos, com a logo em destaque na parede verde" loading="lazy" width="900" height="1200"><figcaption>Recepção</figcaption></figure>
+    <figure class="g-b" data-reveal><img src="assets/espera.jpg" alt="Sala de espera com poltronas e luz natural" loading="lazy" width="900" height="1200"><figcaption>Sala de espera</figcaption></figure>
+    <figure class="g-c" data-reveal><img src="assets/consultorio.jpg" alt="Consultório com cadeira odontológica" loading="lazy" width="900" height="1200"><figcaption>Consultório</figcaption></figure>
+    <figure class="g-d" data-reveal><img src="assets/fachada.jpg" alt="Fachada da Uni Risos na Av. Felipe Carrillo Puerto, 400" loading="lazy" width="1200" height="1000"><figcaption>Av. Felipe Carrillo Puerto, 400</figcaption></figure>
+  </div>
   <div class="stats">
     <div class="stat" data-reveal><b><span data-count="5" data-decimals="1">5,0</span></b><span>nota média no Google</span></div>
     <div class="stat" data-reveal><b><span data-count="70">70</span></b><span>avaliações, todas 5 estrelas</span></div>
@@ -116,22 +116,28 @@
     <h2>Quem cuida <em>de você</em></h2>
   </div>
   <div class="team-grid">
-    <article class="person person-a" data-reveal>
-      <div class="person-mono" aria-hidden="true">JX</div>
-      <div class="person-body">
-        <h3>Dra. Jaqueline Xavier</h3>
-        <p class="person-role">Cirurgiã-dentista · Responsável técnica<br>CRO-SP 151.514</p>
-        <p>É a “Dra. Jaque” das avaliações: mãos leves, explicação clara e paciência com quem chega ansioso, inclusive os pequenos.</p>
-      </div>
-    </article>
-    <article class="person person-b" data-reveal>
-      <div class="person-mono" aria-hidden="true">L</div>
-      <div class="person-body">
-        <h3>Lucas</h3>
-        <p class="person-role">Atendimento ao paciente</p>
-        <p>Quem recebe você, organiza sua agenda e garante que tudo corra bem do agendamento ao retorno.</p>
-      </div>
-    </article>
+    <figure class="team-photo" data-reveal>
+      <img src="assets/equipe.jpg" alt="Dra. Jaqueline Xavier e Lucas sorrindo lado a lado" loading="lazy" width="1035" height="1293">
+      <figcaption>“A Uni Risos nasceu de um sonho: trazer uma odontologia humanizada e acessível para todos.”</figcaption>
+    </figure>
+    <div class="team-people">
+      <article class="person person-a" data-reveal>
+        <img src="assets/jaqueline.jpg" alt="Dra. Jaqueline Xavier" loading="lazy" width="540" height="540">
+        <div class="person-body">
+          <h3>Dra. Jaqueline Xavier</h3>
+          <p class="person-role">Cirurgiã-dentista · Responsável técnica<br>CRO-SP 151.514</p>
+          <p>É a “Dra. Jaque” das avaliações: mãos leves, explicação clara e paciência com quem chega ansioso, inclusive os pequenos.</p>
+        </div>
+      </article>
+      <article class="person person-b" data-reveal>
+        <img src="assets/lucas.jpg" alt="Lucas" loading="lazy" width="510" height="510">
+        <div class="person-body">
+          <h3>Lucas</h3>
+          <p class="person-role">Responsável pela Uni Risos · Atendimento</p>
+          <p>Quem recebe você, organiza sua agenda e garante que tudo corra bem do agendamento ao retorno.</p>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -214,6 +220,7 @@
 
 <footer class="footer">
   <div class="footer-cta">
+    <img class="footer-logo" src="assets/logo-selo.jpg" alt="Uni Risos Odontologia Especializada" loading="lazy" width="640" height="640">
     <p class="serif">Pronto para cuidar do seu sorriso?</p>
     <a class="btn btn-sage btn-lg magnetic" href="#agendar">Agendar consulta <span aria-hidden="true">→</span></a>
   </div>
