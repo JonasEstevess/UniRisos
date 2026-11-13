@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Painel da clínica — Uni Risos</title>
+<meta name="theme-color" content="#17211a">
+<link rel="icon" href="assets/logo-selo.jpg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin">
+<header class="admin-bar">
+  <a class="brand" href="./"><img src="assets/logo-selo.jpg" alt="" width="46" height="46"><span>Uni Risos<small>Painel da clínica</small></span></a>
+  <div class="admin-bar-actions">
+    <span id="adWho"></span>
+    <button class="btn btn-ghost-light" id="adOut" type="button" hidden>Sair</button>
+  </div>
+</header>
+<main class="admin-main" id="adMain" aria-live="polite"><p class="hint">Carregando…</p></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="js/firebase-config.js"></script>
+<script src="js/store.js"></script>
+<script src="js/backend.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
