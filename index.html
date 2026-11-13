@@ -7,6 +7,10 @@
 <meta name="description" content="Clínica odontológica no Jardim Iae, São Paulo. Nota 5,0 no Google. Agende sua consulta online com a Dra. Jaqueline Xavier.">
 <meta name="theme-color" content="#8b926f">
 <link rel="icon" href="assets/logo-selo.jpg">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Uni Risos">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@400;600;800&display=swap">
@@ -61,6 +65,7 @@
     <div class="hero-cta">
       <a class="btn btn-ink btn-lg magnetic" href="#agendar">Agendar consulta <span aria-hidden="true">→</span></a>
       <a class="btn btn-line btn-lg" href="https://wa.me/5511964008106" target="_blank" rel="noopener">WhatsApp</a>
+      <button class="btn btn-line btn-lg" type="button" data-install hidden>Instalar app</button>
     </div>
   </div>
   <img class="hero-logo" src="assets/logo-selo.jpg" alt="Logo da Uni Risos Odontologia Especializada" width="640" height="640">
@@ -174,7 +179,7 @@
   <div class="booking-head">
     <p class="eyebrow">Agendamento online</p>
     <h2>Marque sua consulta em <em>um minuto</em></h2>
-    <p>Escolha o tratamento, o dia e o horário. A clínica confirma com você pelo WhatsApp.</p>
+    <p>Escolha o tratamento, o dia e o horário. O horário fica reservado na hora e a clínica confirma com você pelo WhatsApp.</p>
   </div>
   <div class="booking-card">
     <ol class="steps" id="steps" aria-label="Etapas do agendamento">
@@ -187,6 +192,23 @@
       <button class="btn btn-sage" id="bkNext" type="button" disabled>Continuar</button>
     </div>
   </div>
+</section>
+
+<!-- App -->
+<section class="appband" id="app">
+  <div class="appband-text">
+    <p class="eyebrow">Aplicativo</p>
+    <h2>A Uni Risos <em>no seu celular</em></h2>
+    <p>Instale o app para agendar em poucos toques e acompanhar suas consultas. É gratuito e não precisa de loja de aplicativos.</p>
+    <div class="appband-actions">
+      <button class="btn btn-ink btn-lg" type="button" data-install hidden>Instalar app</button>
+      <a class="btn btn-line btn-lg" href="instalar.html">Como instalar</a>
+    </div>
+  </div>
+  <a class="appband-qr" href="instalar.html" aria-label="Abrir a página de instalação do app">
+    <img src="assets/qr-instalar.svg" alt="QR code para instalar o app da Uni Risos" loading="lazy" width="240" height="240">
+    <span>Aponte a câmera do celular</span>
+  </a>
 </section>
 
 <!-- Contato -->
@@ -228,9 +250,17 @@
   <div class="footer-legal">
     <span>Uni Risos Clínica Odontológica · CRO-SP 037.967</span>
     <span>Resp. técnica: Dra. Jaqueline Xavier · CRO-SP 151.514</span>
-    <span>© <span id="year">2026</span> Uni Risos</span>
+    <span><a href="instalar.html">Instalar o app</a> · <a href="admin.html">Painel da clínica</a> · © <span id="year">2026</span> Uni Risos</span>
   </div>
 </footer>
+
+<!-- Barra do app (aparece quando instalado) -->
+<nav class="tabbar" aria-label="App">
+  <a href="#topo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>Início</a>
+  <a href="#agendar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v14H5z M5 10h14 M9 3v5 M15 3v5"/></svg>Agendar</a>
+  <button type="button" data-account><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 100-8 4 4 0 000 8z M4 21c1-5 15-5 16 0"/></svg>Consultas</button>
+  <a href="#contato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.500C5 14.800 12 21 12 21z M12 12a2.500 2.500 0 100-5 2.500 2.500 0 000 5z"/></svg>Contato</a>
+</nav>
 
 <!-- Conta: entrar / cadastrar / minhas consultas -->
 <div class="overlay" id="overlay" hidden></div>
@@ -242,8 +272,11 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="js/main.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/store.js"></script>
+<script src="js/backend.js"></script>
 <script src="js/booking.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/pwa.js"></script>
 </body>
 </html>
