@@ -12,27 +12,19 @@
   var iso = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
   var serviceOf = function (id) { return UR.services.filter(function (s) { return s.id === id; })[0]; };
 
-  /* Busca no servidor os horários já ocupados nas próximas semanas */
+  /* Busca no servidor os horários já ocupados (consultas e bloqueios) nas próximas semanas.
+     Espera o servidor terminar de carregar antes de consultar. */
   function refresh() {
     var a = UR.nowSP(), b = UR.nowSP();
     b.setDate(b.getDate() + 45);
-    return api.takenRange(iso(a), iso(b)).then(function (map) { taken = map; loaded = true; })
+    return api.ready.then(function () { return api.takenRange(iso(a), iso(b)); })
+      .then(function (map) { taken = map; loaded = true; })
       .catch(function () { loaded = true; UR.toast('Não foi possível carregar a agenda. Verifique sua conexão.'); })
       .then(function () { if (!finished) render(); });
   }
 
-  /* Horários de 30 em 30 minutos dentro do expediente; some o que já passou ou já foi reservado */
-  function slotsFor(dateIso) {
-    var p = dateIso.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]), h = UR.hours[d.getDay()];
-    if (!h) return [];
-    var now = UR.nowSP(), isToday = iso(now) === dateIso, limit = now.getHours() * 60 + now.getMinutes() + 60;
-    var busyDay = taken[dateIso] || {}, out = [];
-    for (var m = h[0] * 60; m < h[1] * 60; m += 30) {
-      var t = pad(Math.floor(m / 60)) + ':' + pad(m % 60);
-      out.push({ time: t, free: !busyDay[t] && !(isToday && m < limit) });
-    }
-    return out;
-  }
+  /* Horários do expediente configurado pela clínica, sem os que já passaram, os ocupados e os bloqueados */
+  function slotsFor(dateIso) { return UR.agenda.slots(dateIso, taken); }
   function days() {
     var out = [], d = UR.nowSP();
     d.setHours(0, 0, 0, 0);
