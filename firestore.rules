@@ -7,11 +7,12 @@ service cloud.firestore {
 
     function signedIn() { return request.auth != null; }
     function isAdmin() { return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function slotPath(d) { return /databases/$(database)/documents/slots/$(d.date + '_' + d.time.replace(':', '')); }
 
-    // Perfil do paciente: só o próprio paciente e a clínica leem.
+    // Perfil do paciente: só o próprio paciente e a clínica leem. O paciente pode apagar a conta (LGPD).
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
-      allow create, update: if signedIn() && request.auth.uid == uid;
+      allow create, update, delete: if signedIn() && request.auth.uid == uid;
     }
 
     // Quem é da clínica. Criado manualmente no console; ninguém escreve pelo site.
@@ -20,27 +21,46 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Horários ocupados: só data e hora, sem dados pessoais, para o site mostrar a disponibilidade.
-    // Não existe regra de update: tentar gravar um horário que já existe é recusado.
+    // Horário de funcionamento: todos leem, só a clínica altera.
+    match /config/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Horários ocupados (consultas e bloqueios): só data e hora, sem dados pessoais.
+    // Não existe regra de update: gravar um horário que já existe é recusado.
     match /slots/{slotId} {
       allow read: if true;
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
-        && slotId == request.resource.data.date + '_' + request.resource.data.time.replace(':', '');
+        && slotId == request.resource.data.date + '_' + request.resource.data.time.replace(':', '')
+        && (request.resource.data.type == 'consulta' || isAdmin());
       allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
     }
 
-    // Consultas: o paciente vê e cancela as suas; a clínica vê e altera todas.
+    // Bloqueios de agenda (folga, feriado, atestado): só a clínica.
+    match /blocks/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Consultas: o paciente vê e cancela as suas; a clínica vê, lança e altera todas.
     match /bookings/{bookingId} {
       allow read: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
-        && request.resource.data.status == 'pendente'
-        && existsAfter(/databases/$(database)/documents/slots/$(request.resource.data.date + '_' + request.resource.data.time.replace(':', '')));
+        && (request.resource.data.status == 'pendente' || (isAdmin() && request.resource.data.status == 'confirmado'))
+        && existsAfter(slotPath(request.resource.data));
       allow update: if isAdmin()
         || (signedIn() && resource.data.uid == request.auth.uid
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'canceladoPor'])
             && request.resource.data.status == 'cancelado');
+    }
+
+    // Aparelhos que recebem notificação. O servidor (Vercel) lê com credencial própria.
+    match /pushSubs/{id} {
+      allow read, delete: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create, update: if signedIn() && request.resource.data.uid == request.auth.uid
+        && (request.resource.data.role == 'paciente' || isAdmin());
     }
   }
 }
