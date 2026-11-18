@@ -12,3 +12,6 @@ window.UR_FIREBASE = {
   messagingSenderId: '114227808044',
   appId: '1:114227808044:web:38340586da826d4f57ce89'
 };
+
+/* Chave pública das notificações no celular (Web Push). A chave privada fica só na Vercel. */
+window.UR_PUSH_KEY = 'BP4LQJ8qUh_YKVM1GKOKLAFL5zDHbJmDfuJ-1jr9DqeCXCWLBjvwqGCHCChseCIhagadrH2sWQzB9q38ONdb5YU';
