@@ -21,6 +21,7 @@
         field('auPhone', 'WhatsApp', 'tel', 'inputmode="numeric" autocomplete="tel" placeholder="(11) 90000-0000" value="' + esc(UR.maskPhone(prefill.phone || '')) + '"')) +
       field('auEmail', 'E-mail', 'email', 'autocomplete="email"') +
       field('auPass', 'Senha', 'password', 'autocomplete="' + (login ? 'current-password' : 'new-password') + '"' + (login ? '' : ' placeholder="Mínimo de 6 caracteres"')) +
+      (login ? '' : '<label class="field" style="display:flex;gap:10px;align-items:flex-start;font-weight:500"><input id="auConsent" type="checkbox" style="width:20px;height:20px;margin-top:2px;flex:none"><span>Li e aceito a <a href="privacidade.html" target="_blank" style="text-decoration:underline">Política de privacidade</a>.</span></label><span class="err" id="auConsentErr" style="color:#c2401f"></span>') +
       '<button class="btn btn-ink btn-lg btn-block" type="submit"' + (busy ? ' disabled' : '') + '>' + (busy ? 'Aguarde…' : login ? 'Entrar' : 'Criar conta') + '</button></form>' +
       (login ? '<p class="note"><button type="button" id="auReset" style="text-decoration:underline">Esqueci minha senha</button></p>' : '') +
       (api.mode === 'local' ? '<p class="note">Modo de demonstração: os dados ficam salvos só neste dispositivo.</p>' : '');
@@ -104,6 +105,7 @@
       ok = setErr('auName', name.length >= 3 ? '' : 'Digite seu nome completo.') && ok;
       ok = setErr('auPhone', phone.length >= 10 ? '' : 'Digite o WhatsApp com DDD.') && ok;
       ok = setErr('auPass', pass.length >= 6 ? '' : 'A senha precisa ter pelo menos 6 caracteres.') && ok;
+    ok = setErr('auConsent', document.getElementById('auConsent').checked ? '' : 'Para criar a conta, aceite a política de privacidade.') && ok;
       if (!ok) return;
       greet = 'Conta criada. Bem-vindo, ' + name.split(' ')[0] + '!';
       job = function () { return api.signUp({ name: name, phone: phone, email: email, pass: pass }); };
