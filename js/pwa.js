@@ -10,14 +10,18 @@
 
   if (standalone) document.documentElement.classList.add('is-app');
 
+  /* O service worker fica na raiz do site, mesmo quando esta página está em /app/ */
+  var me = document.querySelector('script[src*="pwa.js"]');
+  var base = me ? me.src.replace(/js\/pwa\.js.*$/, '') : './';
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    window.addEventListener('load', function () { navigator.serviceWorker.register(base + 'sw.js', { scope: base }).catch(function () {}); });
   }
 
   function refresh() {
     var can = !standalone && (deferred || ios);
     buttons().forEach(function (b) { b.hidden = !can; });
     document.documentElement.classList.toggle('can-install', !!can);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-install-card]'), function (c) { c.hidden = !can; });
     var st = document.getElementById('installState');
     if (st) st.textContent = standalone ? 'Você já está usando o app instalado.'
       : deferred ? 'Toque em “Instalar app” para adicionar à tela inicial.'

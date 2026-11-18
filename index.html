@@ -38,6 +38,7 @@
     <a href="#equipe">Equipe</a>
     <a href="#avaliacoes">Avaliações</a>
     <a href="#contato">Contato</a>
+    <a href="app/">App</a>
   </nav>
   <div class="nav-actions">
     <button class="btn btn-ghost" id="accountBtn" type="button">Entrar</button>
@@ -201,7 +202,8 @@
     <h2>A Uni Risos <em>no seu celular</em></h2>
     <p>Instale o app para agendar em poucos toques e acompanhar suas consultas. É gratuito e não precisa de loja de aplicativos.</p>
     <div class="appband-actions">
-      <button class="btn btn-ink btn-lg" type="button" data-install hidden>Instalar app</button>
+      <a class="btn btn-ink btn-lg" href="app/">Abrir o app</a>
+      <button class="btn btn-line btn-lg" type="button" data-install hidden>Instalar app</button>
       <a class="btn btn-line btn-lg" href="instalar.html">Como instalar</a>
     </div>
   </div>
@@ -250,7 +252,7 @@
   <div class="footer-legal">
     <span>Uni Risos Clínica Odontológica · CRO-SP 037.967</span>
     <span>Resp. técnica: Dra. Jaqueline Xavier · CRO-SP 151.514</span>
-    <span><a href="instalar.html">Instalar o app</a> · <a href="admin.html">Painel da clínica</a> · © <span id="year">2026</span> Uni Risos</span>
+    <span><a href="app/">App</a> · <a href="instalar.html">Instalar o app</a> · <a href="privacidade.html">Política de privacidade</a> · <a href="app/#agenda">Painel da clínica</a> · © <span id="year">2026</span> Uni Risos</span>
   </div>
 </footer>
 
@@ -271,9 +273,11 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="js/servicos.js"></script>
 <script src="js/main.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/store.js"></script>
+<script src="js/agenda.js"></script>
 <script src="js/backend.js"></script>
 <script src="js/booking.js"></script>
 <script src="js/auth.js"></script>
