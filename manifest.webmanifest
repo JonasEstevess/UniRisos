@@ -3,11 +3,11 @@
   "short_name": "Uni Risos",
   "description": "Agende e acompanhe suas consultas na Uni Risos.",
   "lang": "pt-BR",
-  "start_url": "./?origem=app",
+  "start_url": "./app/",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#17211a",
+  "background_color": "#f2f3ea",
   "theme_color": "#8b926f",
   "categories": ["medical", "health"],
   "icons": [
@@ -16,6 +16,6 @@
     { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Agendar consulta", "short_name": "Agendar", "url": "./?origem=app#agendar", "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }] }
+    { "name": "Agendar consulta", "short_name": "Agendar", "url": "./app/#agendar", "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }] }
   ]
 }
