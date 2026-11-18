@@ -8,8 +8,11 @@ Site e aplicativo da Uni Risos, clínica odontológica no Jardim Iae, São Paulo
 - Painel da clínica com a agenda em tempo real (`admin.html`)
 - Aplicativo instalável no celular por link ou QR code (`instalar.html`)
 
-Site: https://jonasestevess.github.io/UniRisos/
-Instalação do app: https://jonasestevess.github.io/UniRisos/instalar.html
+Site: https://uni-risos.vercel.app
+Instalação do app: https://uni-risos.vercel.app/instalar.html
+Painel da clínica: https://uni-risos.vercel.app/admin.html
+
+O site é hospedado na Vercel e publicado a cada push na `main`. O GitHub Pages (https://jonasestevess.github.io/UniRisos/) continua ativo como cópia.
 
 ## Rodando localmente
 
@@ -33,6 +36,7 @@ python -m http.server 5173
 | `js/store.js` | Utilitários e armazenamento do modo de demonstração |
 | `js/pwa.js`, `sw.js`, `manifest.webmanifest` | Aplicativo instalável |
 | `firestore.rules` | Regras de segurança do banco |
+| `vercel.json` | Cabeçalhos da hospedagem na Vercel |
 
 ## Ligando o servidor (Firebase)
 
@@ -40,7 +44,7 @@ Enquanto `js/firebase-config.js` estiver vazio, o site roda em **modo de demonst
 
 1. Crie um projeto em https://console.firebase.google.com.
 2. Em **Authentication > Método de login**, ative **E-mail/senha**.
-3. Em **Authentication > Configurações > Domínios autorizados**, adicione `jonasestevess.github.io` (ou o domínio final).
+3. Em **Authentication > Configurações > Domínios autorizados**, adicione o domínio do site (hoje `uni-risos.vercel.app` e `jonasestevess.github.io`).
 4. Em **Firestore Database**, crie o banco em modo de produção, região `southamerica-east1`.
 5. Em **Firestore Database > Regras**, cole o conteúdo de `firestore.rules` e publique.
 6. Em **Configurações do projeto > Seus apps**, adicione um app da Web e cole a configuração em `js/firebase-config.js`.
