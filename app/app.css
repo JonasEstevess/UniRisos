@@ -193,7 +193,7 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 
 .dates { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; margin: 0 -16px; padding: 4px 16px 8px; scrollbar-width: none; }
 .dates::-webkit-scrollbar { display: none; }
-.month-label { padding: 0 4px; font-weight: 700; font-size: .92rem; text-transform: capitalize; }
+.month-label { padding: 0 4px; font-weight: 700; font-size: .92rem; }
 .date {
   flex: none; width: 64px; padding: 10px 0 9px; border-radius: 18px; display: grid; justify-items: center; gap: 2px;
   background: var(--card); box-shadow: 0 1px 0 var(--line); scroll-snap-align: start;

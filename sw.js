@@ -1,6 +1,6 @@
 /* Uni Risos — service worker: app rápido, funcionando sem conexão e recebendo notificações.
    Ao publicar mudanças, aumente VERSION para os aparelhos baixarem os arquivos novos. */
-const VERSION = 'uni-risos-v4';
+const VERSION = 'uni-risos-v5';
 const SHELL = [
   './', 'index.html', 'instalar.html', 'privacidade.html', 'styles.css', 'manifest.webmanifest',
   'app/', 'app/index.html', 'app/app.css', 'app/app.js',

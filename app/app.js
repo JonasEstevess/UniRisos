@@ -295,7 +295,9 @@
       const slots = bk.date ? A.slots(bk.date, S.taken).filter((s) => s.free) : [];
       if (bk.time && !slots.some((s) => s.time === bk.time)) bk.time = null;
       const groups = [['Manhã', slots.filter((s) => s.time < '12:00')], ['Tarde', slots.filter((s) => s.time >= '12:00')]].filter((g) => g[1].length);
-      const month = bk.date ? A.parse(bk.date).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) : '';
+      const monthRaw = bk.date ? A.parse(bk.date).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) : '';
+      const month = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1);
+      const today = A.today();
       return {
         tab: 'agendar', title: svcOf(bk.service).name, back: 'agendar', barRight: dots(2),
         html: `
@@ -304,7 +306,7 @@
         <div class="dates" role="listbox" aria-label="Dias">${days.map((d) => {
           const closed = !d.total, full = d.total && !d.free;
           return `<button class="date ${d.iso === bk.date ? 'on' : ''} ${d.free ? '' : 'off'}" data-act="date" data-v="${d.iso}" ${d.free ? '' : 'disabled'} role="option" aria-selected="${d.iso === bk.date}">
-            <small>${WD[d.date.getDay()]}</small><b>${d.date.getDate()}</b><em>${closed ? 'fechado' : full ? 'lotado' : d.free + ' livres'}</em></button>`;
+            <small>${WD[d.date.getDay()]}</small><b>${d.date.getDate()}</b><em>${closed ? 'fechado' : full ? (d.iso === today ? 'encerrado' : 'lotado') : d.free + (d.free > 1 ? ' livres' : ' livre')}</em></button>`;
         }).join('')}</div>
         <div>
           ${groups.length ? groups.map(([g, list]) => `<p class="times-h">${g}</p><div class="times">${list.map((s) =>
